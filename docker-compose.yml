@@ -1,51 +1,58 @@
 version: '3.9'
 services: 
-  service-endpoint:
-    build: service_endpoint/.
+  authentication:
+    build: zeta/src/authentication/.
     ports: 
       - "5000:5000"
     environment: 
-      - AUTH_SERVICE_NAME=auth-service
-      - SERVICE_KNOWLEDGE=service-knowledge
-      - PYTHONUNBUFFERED=1
-  auth-service:
-    build: auth_service/.
+      - AUTH_SERVICE_NAME=authorization
+      - SERVICE_KNOWLEDGE_NAME=service-knowledge
+      - SERVICE_KNOWLEDGE_USERNAME=${SERVICE_KNOWLEDGE_USERNAME}
+      - SERVICE_KNOWLEDGE_PASSWORD=${SERVICE_KNOWLEDGE_PASSWORD}
+  authorization:
+    build: zeta/src/authorization/.
     environment: 
-      - TRUST_SERVICE_NAME=trust-compute
+      - TRUST_SERVICE_NAME=trust-computation
       - POLICY_EVAL_SERVICE_NAME=policy-evaluation
+      - SERVICE_KNOWLEDGE_NAME=service-knowledge
+      - SERVICE_KNOWLEDGE_USERNAME=${SERVICE_KNOWLEDGE_USERNAME}
+      - SERVICE_KNOWLEDGE_PASSWORD=${SERVICE_KNOWLEDGE_PASSWORD}
   observed-knowledge:
     image: influxdb:2.0.6
     ports:
-      - 8086:8086
+      - 8086:8086 # very optional
     environment: 
-      - DOCKER_INFLUXDB_INIT_USERNAME=my-user
-      - DOCKER_INFLUXDB_INIT_PASSWORD=my-password
-      - DOCKER_INFLUXDB_INIT_ORG=my-org
-      - DOCKER_INFLUXDB_INIT_BUCKET=my-bucket
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_INIT_USERNAME}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_INIT_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_INIT_ORG}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_INIT_BUCKET}
     volumes: 
       - ./knowledge/observed/influxdb:/etc/influxdb2
-  trust-compute:
-    build: trust/.
-    ports:
-      - 3000:3000
+  trust-computation:
+    build: zeta/src/trust-computation/.
+    environment: 
+      - SERVICE_KNOWLEDGE_NAME=service-knowledge
+      - SERVICE_KNOWLEDGE_USERNAME=${SERVICE_KNOWLEDGE_USERNAME}
+      - SERVICE_KNOWLEDGE_PASSWORD=${SERVICE_KNOWLEDGE_PASSWORD}
+      - INFLUXDB_INIT_USERNAME=${INFLUXDB_INIT_USERNAME}
+      - INFLUXDB_INIT_PASSWORD=${INFLUXDB_INIT_PASSWORD}
+      - INFLUXDB_INIT_ORG=${INFLUXDB_INIT_ORG}
+      - INFLUXDB_INIT_BUCKET=${INFLUXDB_INIT_BUCKET}
   policy-engine:
     image: openpolicyagent/opa:latest
-    ports: 
-      - 8181:8181
     command: run -s
   policy-evaluation:
-    build: policy-evaluation/.
+    build: zeta/src/policy-evaluation/.
     environment: 
       - OPA_SERVICE_NAME=policy-engine
-    ports:
-      - 3001:3001
   service-knowledge:
     image: postgres:latest
     environment:
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_USER=service-knowledge
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+      - POSTGRES_PASSWORD=${SERVICE_KNOWLEDGE_PASSWORD}
+      - POSTGRES_USER=${SERVICE_KNOWLEDGE_USERNAME}
+  user-endpoint:
+    build: zeta/src/user-endpoint/.
+    environment: 
+      - SERVICE_KNOWLEDGE_URL=service-knowledge
+      - POLICY_EVALUATION_SERVICE=policy-evaluation
+      - TRUST_KNOWLEDGE_URL=trust-computation

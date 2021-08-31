@@ -18,11 +18,14 @@ PRIVATE_KEY = None
 PUBLIC_KEY = None
 TRUST_SERVICE_NAME = None
 POLICY_EVAL_SERVICE_NAME = None
- 
+SERVICE_KNOWLEDGE_NAME = None
+SERVICE_KNOWLEDGE_USERNAME = None
+SERVICE_KNOWLEDGE_PASSWORD = None
+
 class ServiceDatabaseHandler:
     def __init__(self):
         #Connect to db
-        self.conn = psycopg2.connect(f"postgres://service-knowledge:password@service-knowledge")
+        self.conn = psycopg2.connect(f"postgres://{SERVICE_KNOWLEDGE_USERNAME}:{SERVICE_KNOWLEDGE_PASSWORD}@{SERVICE_KNOWLEDGE_NAME}")
         self.cur = self.conn.cursor()
         self.cur.execute('SELECT version()')
         db_version = self.cur.fetchone()
@@ -65,6 +68,18 @@ def init_environment_variables():
     POLICY_EVAL_SERVICE_NAME = os.environ.get('POLICY_EVAL_SERVICE_NAME')
     if not POLICY_EVAL_SERVICE_NAME:
         raise Exception('POLICY_EVAL_SERVICE_NAME not defined')
+
+    SERVICE_KNOWLEDGE_USERNAME = os.environ.get('SERVICE_KNOWLEDGE_USERNAME')
+    if not SERVICE_KNOWLEDGE_USERNAME:
+        raise Exception('SERVICE_KNOWLEDGE_USERNAME not defined')
+
+    SERVICE_KNOWLEDGE_NAME = os.environ.get('SERVICE_KNOWLEDGE_NAME')
+    if not SERVICE_KNOWLEDGE_NAME:
+        raise Exception('SERVICE_KNOWLEDGE_NAME not defined')
+
+    SERVICE_KNOWLEDGE_PASSWORD = os.environ.get('SERVICE_KNOWLEDGE_PASSWORD')
+    if not SERVICE_KNOWLEDGE_PASSWORD:
+        raise Exception('SERVICE_KNOWLEDGE_PASSWORD not defined')
 
 
 def read_public_key():

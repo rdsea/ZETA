@@ -15,7 +15,7 @@ logger = CustomLogger().get_logger()
 class ServiceDatabaseHandler:
     def __init__(self):
         #Connect to db
-        self.conn = psycopg2.connect(f"postgres://service-knowledge:password@service-knowledge")
+        self.conn = psycopg2.connect(f"postgres://{SERVICE_KNOWLEDGE_USERNAME}:{SERVICE_KNOWLEDGE_PASSWORD}@{SERVICE_KNOWLEDGE_NAME}")
         self.cur = self.conn.cursor()
         self.cur.execute('SELECT version()')
         db_version = self.cur.fetchone()
@@ -44,6 +44,10 @@ app.register_blueprint(swagger_blueprint, url_prefix=swagger_url)
 
 # ENV Variables
 AUTH_SERVICE_NAME = None
+SERVICE_KNOWLEDGE_NAME = None
+SERVICE_KNOWLEDGE_USERNAME = None
+SERVICE_KNOWLEDGE_PASSWORD = None
+
 db = ServiceDatabaseHandler()
 # Checks and initializes env variables required for the service
 def init_environment_variables():
@@ -52,6 +56,18 @@ def init_environment_variables():
     AUTH_SERVICE_NAME = os.environ.get('AUTH_SERVICE_NAME')
     if not AUTH_SERVICE_NAME:
         raise Exception('AUTH_SERVICE_NAME not defined')
+
+    SERVICE_KNOWLEDGE_USERNAME = os.environ.get('SERVICE_KNOWLEDGE_USERNAME')
+    if not SERVICE_KNOWLEDGE_USERNAME:
+        raise Exception('SERVICE_KNOWLEDGE_USERNAME not defined')
+
+    SERVICE_KNOWLEDGE_NAME = os.environ.get('SERVICE_KNOWLEDGE_NAME')
+    if not SERVICE_KNOWLEDGE_NAME:
+        raise Exception('SERVICE_KNOWLEDGE_NAME not defined')
+
+    SERVICE_KNOWLEDGE_PASSWORD = os.environ.get('SERVICE_KNOWLEDGE_PASSWORD')
+    if not SERVICE_KNOWLEDGE_PASSWORD:
+        raise Exception('SERVICE_KNOWLEDGE_PASSWORD not defined')
 
 
 class AuthenticationTokenService(Resource):
