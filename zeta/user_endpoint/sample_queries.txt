@@ -1,0 +1,41 @@
+These are the input to the policy endpoint service:
+
+URL: 195.148.21.10:3001/createPolicy
+METHOD: POST
+BODY: {
+    "policyName" : "client_1_policy",
+    "policyString": "package zeta \nimport data.zeta_framework.client_1.zeta_framework.client_1 \ndefault trust_client_1 = false \ntrust_client_1 { \ntrust := input.trust \n client_1.service_name=\"edge-inference-server\" \nclient_1.trust == trust \ninput.time > 10 \n}"
+}
+
+
+URL: 195.148.21.10:3001/updateData
+METHOD: POST
+BODY: {
+    "data": {
+            "zeta_framework": {
+                "client_1": {
+                    "trust" : "MEDIUM",
+                    "service_name" : "edge-inference-server"
+                },
+                "client_2":{
+                    "trust" : "HIGH",
+                    "service_name" : "cloud-inference-server"
+                }
+            }
+    },
+    "endpoint": "zeta_framework/client_1"
+}
+
+URL: 195.148.21.10:3001/evaluatePolicy
+METHOD: POST
+BODY: {
+    "data": {
+                "trust": "MEDIUM",
+                "time": 23
+            },
+    "policy_name": "client_1_policy",
+    "rule":"trust_client_1"
+
+}
+
+#TIP: CHECK THE DATA FROM : http://195.148.21.10:8181/v1/data

@@ -1,0 +1,51 @@
+version: '3.9'
+services: 
+  service-endpoint:
+    build: service_endpoint/.
+    ports: 
+      - "5000:5000"
+    environment: 
+      - AUTH_SERVICE_NAME=auth-service
+      - SERVICE_KNOWLEDGE=service-knowledge
+      - PYTHONUNBUFFERED=1
+  auth-service:
+    build: auth_service/.
+    environment: 
+      - TRUST_SERVICE_NAME=trust-compute
+      - POLICY_EVAL_SERVICE_NAME=policy-evaluation
+  observed-knowledge:
+    image: influxdb:2.0.6
+    ports:
+      - 8086:8086
+    environment: 
+      - DOCKER_INFLUXDB_INIT_USERNAME=my-user
+      - DOCKER_INFLUXDB_INIT_PASSWORD=my-password
+      - DOCKER_INFLUXDB_INIT_ORG=my-org
+      - DOCKER_INFLUXDB_INIT_BUCKET=my-bucket
+    volumes: 
+      - ./knowledge/observed/influxdb:/etc/influxdb2
+  trust-compute:
+    build: trust/.
+    ports:
+      - 3000:3000
+  policy-engine:
+    image: openpolicyagent/opa:latest
+    ports: 
+      - 8181:8181
+    command: run -s
+  policy-evaluation:
+    build: policy-evaluation/.
+    environment: 
+      - OPA_SERVICE_NAME=policy-engine
+    ports:
+      - 3001:3001
+  service-knowledge:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=service-knowledge
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

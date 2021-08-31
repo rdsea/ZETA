@@ -1,0 +1,77 @@
+openapi: "3.0.0"
+info:
+  description: "This is the service endpoint. You can use these API's to manage tokens and evaluate elasticity policies."
+  version: "1.0.0"
+  title: "Service Point"
+  contact:
+    email: "rohit.raj@aalto.fi"
+servers:
+- url: http://localhost:5000
+  description: Development server
+- url: https://localhost:5000
+  description: Deployment server
+components:
+  schemas:
+    GeneralError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    GeneralResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - success
+          - error
+        data:
+          type: object
+          properties:
+            token:
+              type: string
+        message:
+          type: string
+tags:
+- name: "Token"
+paths:
+    /token:
+      get:
+        tags:
+        - "Token"
+        description: Returns a token
+        parameters:
+        - name: "name"
+          in: query
+          required: true
+          schema:
+            type: string
+        responses:
+          '200':
+            description: A signed JWT token to be returned
+            content: 
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                      - success
+                      - error
+                    data:
+                      type: object
+                      properties:
+                        token:
+                          type: string
+                    message:
+                      type: string
+          default:
+            description: Unexpected error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/GeneralError'
