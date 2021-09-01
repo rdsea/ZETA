@@ -1,0 +1,7 @@
+workers,service_cpu_utils,service_memory_util,policy_eval_cpu_util,policy_eval_memory_util,policy_engine_cpu_util,policy_engine_memory_util,trust_cpu_util,trust_memory_util,auth_endpoint_cpu,auth_endpoint_memory,service_knowledge_cpu_util,service_knowledge_memory_util,observed_knowledge_cpu_util,observed_knowledge_memory_util
+1,0.45,57.6,0.426,36.3,0.270,25.6,44.1,100,0.743,41.9,0.08,51,0.05,72.9
+5,1.57,57.8,1.58,36.3,1.05,25.4,148,116,2.45,42.1,0.241,52.2,0.05,72.9
+10,1.03,57.8,1.10,36.3,0.08,25.6,108,120,1.83,42.1,0.167,52.4,0.04,72.9
+15,1.8,57.8,1.99,36.4,1.38,25.9,189,146,3.08,42.4,0.34,53.7,0.1,72.9
+20,2.0,57.8,2.03,36.4,1.24,26.3,190,157,3.37,42.4,0.27,54.3,0.4,72.9
+25,3.2,58,2.1,38,1.5,27,187,174,4.1,43,0.5,55.2,0.8,72.9
