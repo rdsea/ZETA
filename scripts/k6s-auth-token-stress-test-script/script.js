@@ -10,7 +10,8 @@ export let options = {
 };
 
 export default function () {
-  let res = http.get('http://195.148.21.10:5000/authentication?name=test-service&capabilities=cpu&expiry=1');
+  let zeta_server_url // Fill the appropriate location where ZETA is deployed
+  let res = http.get(`http://${zeta_server_url}/authentication?name=test-service&capabilities=cpu&expiry=1`);
   check(res, { 'status was 200': (r) => r.status == 200 });
   sleep(1);
 }

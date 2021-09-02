@@ -10,7 +10,9 @@ export let options = {
 };
 
 export default function () {
-  let res = http.get('http://195.148.21.10:5000/elasticity?name=test-service&expiry=12&auth_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJleHAiOjE2MjcwNzE1NDIsIm5iZiI6MTYyNzAzNTU0MiwiYXVkIjpbInRlZmE6dGVzdC1zZXJ2aWNlIl0sInR5cGUiOiJhdXRoX3Rva2VuIiwiY2YiOiJjcHUsZ3B1In0.Q-sGc-1CrmQtyfLeVuppHlDv2DQTl577QAEB6Z24CSEPoZtyw_5CIPyHaOa5Txw8lccrAaO2hRbKX21_MMv0bQ&claims=cpu&value=12&target=edge-inference-server');
+  let zeta_server_url // Fill the appropriate location where ZETA is deployed
+  let auth_token // Get a fresh auth token and put it here
+  let res = http.get(`http://${zeta_server_url}/elasticity?name=test-service&expiry=12&auth_token=${auth_token}&claims=cpu&value=12&target=edge-inference-server`);
   check(res, { 'status was 200': (r) => r.status == 200 });
   sleep(1);
 }
