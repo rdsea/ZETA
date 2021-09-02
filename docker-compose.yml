@@ -1,7 +1,7 @@
 version: '3.9'
 services: 
   authentication:
-    build: zeta/src/authentication/.
+    build: src/authentication/.
     ports: 
       - "5000:5000"
     environment: 
@@ -10,7 +10,7 @@ services:
       - SERVICE_KNOWLEDGE_USERNAME=${SERVICE_KNOWLEDGE_USERNAME}
       - SERVICE_KNOWLEDGE_PASSWORD=${SERVICE_KNOWLEDGE_PASSWORD}
   authorization:
-    build: zeta/src/authorization/.
+    build: src/authorization/.
     environment: 
       - TRUST_SERVICE_NAME=trust-computation
       - POLICY_EVAL_SERVICE_NAME=policy-evaluation
@@ -29,7 +29,7 @@ services:
     volumes: 
       - ./knowledge/observed/influxdb:/etc/influxdb2
   trust-computation:
-    build: zeta/src/trust-computation/.
+    build: src/trust-computation/.
     environment: 
       - SERVICE_KNOWLEDGE_NAME=service-knowledge
       - SERVICE_KNOWLEDGE_USERNAME=${SERVICE_KNOWLEDGE_USERNAME}
@@ -42,7 +42,7 @@ services:
     image: openpolicyagent/opa:latest
     command: run -s
   policy-evaluation:
-    build: zeta/src/policy-evaluation/.
+    build: src/policy-evaluation/.
     environment: 
       - OPA_SERVICE_NAME=policy-engine
   service-knowledge:
@@ -51,7 +51,7 @@ services:
       - POSTGRES_PASSWORD=${SERVICE_KNOWLEDGE_PASSWORD}
       - POSTGRES_USER=${SERVICE_KNOWLEDGE_USERNAME}
   user-endpoint:
-    build: zeta/src/user-endpoint/.
+    build: src/user-endpoint/.
     environment: 
       - SERVICE_KNOWLEDGE_URL=service-knowledge
       - POLICY_EVALUATION_SERVICE=policy-evaluation
