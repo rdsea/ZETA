@@ -36,7 +36,20 @@ Steps:
 * Edit the `trust-computation/trust_config.yaml` values.
 * Put your public/private keypair in the authorization service component
 * _(Optional)_ Supplement the `gp_regression.py` with your own.
-* Run `docker-compose up`
+* Fill the docker-compose.yml config variables
+* create .env file for sensitive environment variables
+
+_Mandatory Env variables:_
+| Variable Name              | Description                                       |
+|----------------------------|---------------------------------------------------|
+| SERVICE_KNOWLEDGE_USERNAME | Username for service knowledge component          |
+| SERVICE_KNOWLEDGE_PASSWORD | Password for service knowledge component          |
+| INFLUXDB_INIT_PASSWORD     | Password for InfluxDB                             |
+| INFLUXDB_INIT_USERNAME     | Username for InfluxDB                             |
+| INFLUXDB_INIT_BUCKET       | Bucket Name for InfluxDB (Optional)               |
+| INFLUXDB_INIT_ORG          | Default organization name for InfluxDB (Optional) |
+
+Finally, start the docker-compose.yml services
 
 ## About the work <a name="about"></a>
 ZETA framework is a part of Master's thesis titled "Establishing trust for secure elasticity in edge-cloud microservices__" written by Rohit Raj and supervised by Prof. Hong-Linh Truong and Prof Aurèlien Francillon. If you use this work, please cite the thesis.
