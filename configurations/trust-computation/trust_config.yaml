@@ -1,0 +1,6 @@
+trustAlgorithm: default_gpr
+# Specify the model parameters
+parameters:
+  trust-sensitivity: 10
+  noise: medium
+  accuracy: medium

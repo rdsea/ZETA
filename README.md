@@ -1,6 +1,5 @@
 # ZETA Framework
- <img src="https://img.shields.io/github/languages/top/rdsea/zeta" />
-<img src="https://img.shields.io/github/issues-raw/rdsea/zeta?color=green" />
+ <img src="https://img.shields.io/github/languages/top/rdsea/zeta" /> <img src="https://img.shields.io/github/issues-raw/rdsea/zeta?color=green" />
 
 
 **ZETA (ZEro Trust elAsticity)** is an open-source framework that supports zero-trust in the elasticity of edge-cloud microservices. ZETA also provides support for elasticity delegation capabilities between these edge-cloud microservices. 

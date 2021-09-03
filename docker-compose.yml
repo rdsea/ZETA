@@ -1,0 +1,58 @@
+version: '3.9'
+services: 
+  authentication:
+    build: src/authentication/.
+    ports: 
+      - "5000:5000"
+    environment: 
+      - AUTH_SERVICE_NAME=authorization
+      - SERVICE_KNOWLEDGE_NAME=service-knowledge
+      - SERVICE_KNOWLEDGE_USERNAME=${SERVICE_KNOWLEDGE_USERNAME}
+      - SERVICE_KNOWLEDGE_PASSWORD=${SERVICE_KNOWLEDGE_PASSWORD}
+  authorization:
+    build: src/authorization/.
+    environment: 
+      - TRUST_SERVICE_NAME=trust-computation
+      - POLICY_EVAL_SERVICE_NAME=policy-evaluation
+      - SERVICE_KNOWLEDGE_NAME=service-knowledge
+      - SERVICE_KNOWLEDGE_USERNAME=${SERVICE_KNOWLEDGE_USERNAME}
+      - SERVICE_KNOWLEDGE_PASSWORD=${SERVICE_KNOWLEDGE_PASSWORD}
+  observed-knowledge:
+    image: influxdb:2.0.6
+    ports:
+      - 8086:8086 # very optional
+    environment: 
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_INIT_USERNAME}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_INIT_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_INIT_ORG}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_INIT_BUCKET}
+    volumes: 
+      - ./knowledge/observed/influxdb:/etc/influxdb2
+  trust-computation:
+    build: src/trust-computation/.
+    environment: 
+      - SERVICE_KNOWLEDGE_NAME=service-knowledge
+      - SERVICE_KNOWLEDGE_USERNAME=${SERVICE_KNOWLEDGE_USERNAME}
+      - SERVICE_KNOWLEDGE_PASSWORD=${SERVICE_KNOWLEDGE_PASSWORD}
+      - INFLUXDB_INIT_USERNAME=${INFLUXDB_INIT_USERNAME}
+      - INFLUXDB_INIT_PASSWORD=${INFLUXDB_INIT_PASSWORD}
+      - INFLUXDB_INIT_ORG=${INFLUXDB_INIT_ORG}
+      - INFLUXDB_INIT_BUCKET=${INFLUXDB_INIT_BUCKET}
+  policy-engine:
+    image: openpolicyagent/opa:latest
+    command: run -s
+  policy-evaluation:
+    build: src/policy-evaluation/.
+    environment: 
+      - OPA_SERVICE_NAME=policy-engine
+  service-knowledge:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=${SERVICE_KNOWLEDGE_PASSWORD}
+      - POSTGRES_USER=${SERVICE_KNOWLEDGE_USERNAME}
+  user-endpoint:
+    build: src/user-endpoint/.
+    environment: 
+      - SERVICE_KNOWLEDGE_URL=service-knowledge
+      - POLICY_EVALUATION_SERVICE=policy-evaluation
+      - TRUST_KNOWLEDGE_URL=trust-computation
