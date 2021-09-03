@@ -38,7 +38,7 @@ Steps:
 * Fill the docker-compose.yml config variables
 * create .env file for sensitive environment variables
 
-_Mandatory Env variables:_
+_Environment variables:_
 | Variable Name              | Description                                       |
 |----------------------------|---------------------------------------------------|
 | SERVICE_KNOWLEDGE_USERNAME | Username for service knowledge component          |
@@ -51,7 +51,7 @@ _Mandatory Env variables:_
 Finally, start the docker-compose.yml services
 
 ## About the work <a name="about"></a>
-ZETA framework is a part of Master's thesis titled "Establishing trust for secure elasticity in edge-cloud microservices__" written by Rohit Raj and supervised by Prof. Hong-Linh Truong and Prof Aurèlien Francillon. If you use this work, please cite the thesis.
+ZETA framework is a part of Master's thesis titled "__Establishing trust for secure elasticity in edge-cloud microservices__" written by Rohit Raj and supervised by Prof. Hong-Linh Truong and Prof Aurèlien Francillon. If you use this work, please cite the thesis.
 
 * Raj, Rohit. 2021. _Establishing trust for secure elasticity in edge-cloud microservices_. Master's Thesis. _(Submitted to)_ Aalto University, Finland & Eurecom, France
 
